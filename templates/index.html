@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>FoodCard Balance</title>
+  <link href="{{ url_for('static', filename='credit-card.ico') }}"
+        rel="shortcut icon" type="image/x-icon">
+  <link href="{{ url_for('static', filename='index.css') }}"
+        rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Lora"
+        rel="stylesheet">
+</head>
+<body>
+  <div id="balance-wrapper">
+    {% if card_number and card_balance %}
+      <div id="card-balance">
+        {{ card_balance }}
+      </div>
+      <div id="card-number">
+        {{ card_number }}
+      </div>
+    {% endif %}
+  </div>
+</body>
+</html>
