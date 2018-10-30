@@ -1,25 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>FoodCard Balance</title>
-  <link href="{{ url_for('static', filename='credit-card.ico') }}"
-        rel="shortcut icon" type="image/x-icon">
-  <link href="{{ url_for('static', filename='index.css') }}"
-        rel="stylesheet" type="text/css">
-  <link href="https://fonts.googleapis.com/css?family=Lora"
-        rel="stylesheet">
-</head>
-<body>
-  <div id="balance-wrapper">
-    {% if card_number and card_balance %}
-      <div id="card-balance">
-        {{ card_balance }}
-      </div>
-      <div id="card-number">
-        {{ card_number }}
-      </div>
-    {% endif %}
-  </div>
-</body>
-</html>
+{% extends 'base.html' %}
+
+{% block body %}
+
+  <form id="card-number-form" action="/balance/" method="get">
+    <input id="card-number-input" name="card_number" placeholder="0 000000 000000" maxlength="15">
+    <button id="btn-get-balance" type="submit">OK</button>
+  </form>
+
+  <script src="{{ url_for('static', filename='index.js') }}"></script>
+
+{% endblock %}

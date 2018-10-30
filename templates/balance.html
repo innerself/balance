@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block body %}
+  <div id="loader" class="lds-roller">
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+  </div>
+
+  <div id="balance-wrapper">
+    <div id="card-balance"></div>
+    <div id="card-number"></div>
+  </div>
+
+  <script src="{{ url_for('static', filename='balance.js') }}"></script>
+
+{% endblock %}
