@@ -2,20 +2,22 @@ import json
 import time
 
 from flask import Flask, render_template, request
+from flask_cors import CORS
 
-from selenium.webdriver import Chrome
-from selenium.webdriver.chrome.webdriver import WebDriver
-from selenium.webdriver.chrome.options import Options
+from selenium.webdriver import Firefox
+from selenium.webdriver.firefox.options import Options
+from selenium.webdriver.firefox.webdriver import WebDriver
 from selenium.common.exceptions import NoSuchElementException
 
 app = Flask(__name__)
+CORS(app)
 
 
 def load_browser() -> WebDriver:
     opt = Options()
     opt.headless = True
 
-    browser = Chrome(executable_path='./chromedriver', options=opt)
+    browser = Firefox(executable_path='./geckodriver', options=opt)
 
     return browser
 
@@ -27,7 +29,9 @@ def get_balance(browser: WebDriver, url: str, card_number: str) -> str:
     browser.get(url)
 
     num_form = browser.find_element_by_id(input_field_id)
+
     time.sleep(2)
+
     num_form.send_keys(card_number)
     num_form.submit()
 
@@ -73,3 +77,6 @@ def query_balance():
         'card_balance': balance,
         'card_number': card_number_spaced,
     })
+
+if __name__ == '__main__':
+    app.run()

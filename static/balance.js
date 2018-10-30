@@ -7,8 +7,9 @@ const loader = document.getElementById('loader');
 function check_balance() {
   let urlParams = new URLSearchParams(window.location.search);
   let card_number = urlParams.get('card_number').split(' ').join('');
+  let queryString = '/query/?card_number=' + card_number
 
-  fetch('/query/?card_number=' + card_number)
+  fetch(queryString)
     .then(function(response) {
       return response.json();
     })
