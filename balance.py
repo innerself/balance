@@ -7,7 +7,10 @@ from flask_cors import CORS
 from selenium.webdriver import Firefox
 from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.firefox.webdriver import WebDriver
-from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions
+from selenium.common.exceptions import NoSuchElementException, TimeoutException
 
 app = Flask(__name__)
 CORS(app)
@@ -27,20 +30,41 @@ def get_balance(browser: WebDriver, url: str, card_number: str) -> str:
     balance_field_class = 'history_header_amount'
 
     browser.get(url)
+    time.sleep(0.5)
 
-    num_form = browser.find_element_by_id(input_field_id)
-
-    time.sleep(2)
+    num_form = WebDriverWait(browser, 5).until(
+        expected_conditions.presence_of_element_located(
+            (By.ID, input_field_id)
+        )
+    )
 
     num_form.send_keys(card_number)
     num_form.submit()
 
-    time.sleep(2)
+    try:
+        balance_field = WebDriverWait(browser, 5).until(
+            expected_conditions.presence_of_element_located(
+                (By.CLASS_NAME, balance_field_class)
+            )
+        )
 
-    result = browser.find_element_by_class_name(balance_field_class)
-    balance = result.text
+        balance = balance_field.text
+    except TimeoutException:
+        error = browser.find_element_by_class_name(
+            'form-messages_message__error'
+        )
 
-    browser.close()
+        errors = [
+            'Проверьте корректность введенных данных',
+            'Введите корректный номер штрих-кода карты',
+        ]
+
+        if error.text in errors:
+            balance = 'Карта не найдена'
+        else:
+            balance = error.text
+    finally:
+        browser.close()
 
     return balance
 
@@ -77,6 +101,7 @@ def query_balance():
         'card_balance': balance,
         'card_number': card_number_spaced,
     })
+
 
 if __name__ == '__main__':
     app.run()
