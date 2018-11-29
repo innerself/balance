@@ -4,7 +4,7 @@ import time
 from flask import Flask, render_template, request
 from flask_cors import CORS
 
-from selenium.webdriver import Firefox
+from selenium.webdriver import Firefox, FirefoxProfile
 from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.firefox.webdriver import WebDriver
 from selenium.webdriver.common.by import By
@@ -20,7 +20,17 @@ def load_browser() -> WebDriver:
     opt = Options()
     opt.headless = True
 
-    browser = Firefox(executable_path='./geckodriver', options=opt)
+    # disable css, images, js
+    profile = FirefoxProfile()
+    profile.set_preference("permissions.default.stylesheet", 2)
+    profile.set_preference("permissions.default.image", 2)
+    profile.set_preference("javascript.enabled", False)
+
+    browser = Firefox(
+        executable_path='./geckodriver',
+        options=opt,
+        firefox_profile=profile,
+    )
 
     return browser
 
