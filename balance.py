@@ -42,11 +42,13 @@ def get_balance(browser: WebDriver, url: str, card_number: str) -> str:
     browser.get(url)
     time.sleep(0.5)
 
-    num_form = WebDriverWait(browser, 5).until(
-        expected_conditions.presence_of_element_located(
-            (By.ID, input_field_id)
-        )
-    )
+    # num_form = WebDriverWait(browser, 5).until(
+    #     expected_conditions.presence_of_element_located(
+    #         (By.ID, input_field_id)
+    #     )
+    # )
+
+    num_form = browser.find_element_by_name(input_field_id)
 
     num_form.send_keys(card_number)
     num_form.submit()
